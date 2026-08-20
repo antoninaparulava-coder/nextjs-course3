@@ -2,6 +2,9 @@ import { connectToDatabase } from '../../../lib/db';
 import { hashPassword } from '@/lib/auth';
 
 async function handler(req, res){
+    if(req.method !== 'POST'){
+        return;
+    }
     const data = req.body;
 
     const { email, password } = data;
@@ -16,7 +19,7 @@ async function handler(req, res){
 
     const db = client.db();
 
-    const hashedPassword = hashPassword(password);
+    const hashedPassword = await hashPassword(password);
 
     const result = await db.collection('users').insertOne({
         email: email,
